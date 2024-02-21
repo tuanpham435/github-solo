@@ -35,7 +35,7 @@ module.exports = {
     rộng .jsx, .js, và bất kỳ phần mở rộng nào khác
      */
     resolve: {
-        extensions: [".jsx", "..."]
+        extensions: ["jsx", "..."]
     },
 
     // Set the mode based on the NODE_ENV environment variable
