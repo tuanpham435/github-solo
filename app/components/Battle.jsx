@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import PropTypes from "prop-types";
+import {close} from "./icons";
 
 function Instructions() {
     return (
@@ -68,6 +70,37 @@ class PlayerInput extends Component {
     }
 }
 
+function PlayerPreview({username, onReset, label}) {
+    return (
+        <article className={'card'}>
+            <h3 className={'player-label'}>{label}</h3>
+            <div className={'split'}>
+                <div className={'row gap-md'}>
+                    <img
+                        width={32}
+                        height={32}
+                        className={'avatar'}
+                        src={`https://github.com/${username}.png?size=200`}
+                        alt={`Avatar for ${username}`}
+                    />
+                    <a href={`https://github.com/${username}`} className={'link'}>
+                        {username}
+                    </a>
+                </div>
+                <button onClick={onReset} className="btn secondary icon">
+                    {close}
+                </button>
+            </div>
+        </article>
+    )
+}
+
+PlayerPreview.propTypes = {
+    username: PropTypes.string.isRequired,
+    onReset: PropTypes.func.isRequired,
+    label: PropTypes.string.isRequired,
+};
+
 export default class Battle extends Component {
     constructor(props) {
         super(props);
@@ -78,12 +111,19 @@ export default class Battle extends Component {
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleReset = this.handleReset.bind(this);
     }
 
     handleSubmit(id, player) {
         this.setState({
             [id]: player
         })
+    }
+
+    handleReset(id) {
+        this.setState({
+            [id]: null,
+        });
     }
 
     render() {
@@ -104,13 +144,25 @@ export default class Battle extends Component {
                             label={"Player One"}
                             onSubmit={(player) => this.handleSubmit("playerOne", player)}
                         />
-                    ) : null}
+                    ) : (
+                        <PlayerPreview
+                            onReset={() => this.handleReset("playerOne")}
+                            label={"Player One"}
+                            username={playerOne}
+                        />
+                    )}
                     {!playerTwo ? (
                         <PlayerInput
                             label={"Player Two"}
                             onSubmit={(player) => this.handleSubmit("PlayerTwo", player)}
                         />
-                    ) : null}
+                    ) : (
+                        <PlayerPreview
+                            onReset={() => this.handleReset("PlayerTwo")}
+                            label={"Player Two"}
+                            username={playerTwo}
+                        />
+                    )}
                 </section>
                 <Instructions/>
             </main>
