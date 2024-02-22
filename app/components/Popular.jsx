@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from "prop-types";
 
 function LanguageNav({selected, onUpdateLanguage}) {
     const languages = ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python', 'PHP'];
@@ -6,10 +7,10 @@ function LanguageNav({selected, onUpdateLanguage}) {
     return (
         <select
             onChange={(e) => onUpdateLanguage(e.target.value)}
+            defaultValue={selected}
         >
             {languages.map((language) => (
                 <option
-                    selected={selected === language}
                     key={language}
                     value={language}
                 >
@@ -18,6 +19,11 @@ function LanguageNav({selected, onUpdateLanguage}) {
             ))}
         </select>
     )
+}
+
+LanguageNav.propTypes = {
+    selected: PropTypes.string.isRequired,
+    onUpdateLanguage: PropTypes.func.isRequired
 }
 
 class Popular extends Component {
