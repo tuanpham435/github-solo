@@ -487,3 +487,7 @@ tbody td:first-child {
 .card li > *:not(:first-child) {
     opacity: 0.75;
 }
+
+.error {
+    color: red;
+}
