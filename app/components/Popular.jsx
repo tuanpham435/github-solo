@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import {fetchPopularRepos} from "../utils/api";
 import Table from "./Table";
+import Loading from "./Loading";
 
 function LanguageNav({selected, onUpdateLanguage}) {
-    const languages = ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python', 'PHP'];
+    const languages = ['All', 'JavaScript', 'Python', 'Java', 'Typescript', 'C#', 'C++', 'PHP', 'Go', 'Rust', 'Shell'];
 
     return (
         <select
@@ -35,7 +36,8 @@ class Popular extends Component {
         this.state = {
             selectedLanguage: "All",
             repos: null,
-            error: null
+            error: null,
+            loading: false,
         }
 
         this.updateLanguage = this.updateLanguage.bind(this);
@@ -47,8 +49,10 @@ class Popular extends Component {
 
     updateLanguage(selectedLanguage) {
         this.setState({
+            repos: null,
             selectedLanguage,
-            error: null
+            error: null,
+            loading: true,
         });
 
         fetchPopularRepos(selectedLanguage)
@@ -61,13 +65,16 @@ class Popular extends Component {
             .catch((error) => {
                 console.warn("Error fetching repos:", error);
                 this.setState({
-                    error: 'There was an error fetching the repositories'
+                    error: 'There was an error fetching the repositories',
                 });
+            })
+            .finally(() => {
+                this.setState({loading: false,});
             });
     }
 
     render() {
-        const {selectedLanguage, repos, error} = this.state;
+        const {selectedLanguage, repos, error, loading} = this.state;
 
         return (
             <main className={'stack main-stack animate-in'}>
@@ -78,6 +85,9 @@ class Popular extends Component {
                         onUpdateLanguage={this.updateLanguage}
                     />
                 </div>
+
+                {loading && <p className={'text-center'}><Loading/></p>}
+
                 {error && <p className={'text-center error'}>{error}</p>}
 
                 {repos && <Table repos={repos}/>}
