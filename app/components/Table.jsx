@@ -82,29 +82,31 @@ function TableRow({
     return (
         <tr>
             <td>{index + 1}</td>
-            <Tooltip
-                element={
-                    <MoreInfo
-                        created_at={created_at}
-                        language={language}
-                        updated_at={updated_at}
-                        watchers={watchers}
-                        type={type}
-                        login={login}
-                    />
-                }
-            >
-                <div className="row gap-md">
-                    <img
-                        width={32}
-                        height={32}
-                        className="avatar"
-                        src={avatar_url}
-                        alt={`Avatar for ${login}`}
-                    />
-                    <a href={`https://github.com/${login}/${name}`}>{name}</a>
-                </div>
-            </Tooltip>
+            <td>
+                <Tooltip
+                    element={
+                        <MoreInfo
+                            created_at={created_at}
+                            language={language}
+                            updated_at={updated_at}
+                            watchers={watchers}
+                            type={type}
+                            login={login}
+                        />
+                    }
+                >
+                    <div className="row gap-md">
+                        <img
+                            width={32}
+                            height={32}
+                            className="avatar"
+                            src={avatar_url}
+                            alt={`Avatar for ${login}`}
+                        />
+                        <a href={`https://github.com/${login}/${name}`}>{name}</a>
+                    </div>
+                </Tooltip>
+            </td>
             <td>{stargazers_count}</td>
             <td>{forks}</td>
             <td>{open_issues}</td>
