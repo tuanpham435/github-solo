@@ -12,7 +12,8 @@ module.exports = {
         path: path.resolve(__dirname, "dist"),
 
         // Output filename for the bundled JavaScript file
-        filename: "index_bundle.js"
+        filename: "index_bundle.js",
+        publicPath: "/"
     },
 
     // Module configuration
@@ -50,4 +51,7 @@ module.exports = {
             template: "app/index.html", // Specify the HTML template
         }),
     ],
+    devServer: {
+        historyApiFallback: true,
+    }
 };
