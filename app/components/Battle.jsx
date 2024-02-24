@@ -17,24 +17,17 @@ function Instructions() {
 }
 
 class PlayerInput extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            username: "",
-        };
-
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+    state = {
+        username: "",
     }
 
-    handleSubmit(e) {
+    handleSubmit = (e) => {
         e.preventDefault();
 
         this.props.onSubmit(this.state.username)
     }
 
-    handleChange(username) {
+    handleChange = (username) => {
         this.setState({
             username
         })
@@ -103,25 +96,18 @@ PlayerPreview.propTypes = {
 };
 
 export default class Battle extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            playerOne: null,
-            playerTwo: null,
-        }
-
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleReset = this.handleReset.bind(this);
+    state = {
+        playerOne: null,
+        playerTwo: null,
     }
 
-    handleSubmit(id, player) {
+    handleSubmit = (id, player) => {
         this.setState({
             [id]: player
         })
     }
 
-    handleReset(id) {
+    handleReset = (id) => {
         this.setState({
             [id]: null,
         });

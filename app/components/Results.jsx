@@ -67,15 +67,11 @@ Card.propTypes = {
 };
 
 class Results extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            winner: null,
-            loser: null,
-            error: null,
-            loading: true,
-        };
+    state = {
+        winner: null,
+        loser: null,
+        error: null,
+        loading: true,
     }
 
     componentDidMount() {
@@ -104,7 +100,7 @@ class Results extends Component {
         const {winner, loser, error, loading} = this.state;
 
         if (loading === true) {
-            return <Loading text={"LOADING"}/>;
+            return <Loading/>;
         }
 
         if (error) {

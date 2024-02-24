@@ -30,24 +30,18 @@ LanguageNav.propTypes = {
 }
 
 class Popular extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            selectedLanguage: "All",
-            repos: null,
-            error: null,
-            loading: false,
-        }
-
-        this.updateLanguage = this.updateLanguage.bind(this);
+    state = {
+        selectedLanguage: "All",
+        repos: null,
+        error: null,
+        loading: false,
     }
 
     componentDidMount() {
         this.updateLanguage(this.state.selectedLanguage);
     }
 
-    updateLanguage(selectedLanguage) {
+    updateLanguage = (selectedLanguage) => {
         this.setState({
             repos: null,
             selectedLanguage,

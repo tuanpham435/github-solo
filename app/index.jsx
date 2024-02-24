@@ -13,17 +13,11 @@ import Results from "./components/Results";
 */
 
 class App extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            theme: 'light',
-        }
-
-        this.toggleTheme = this.toggleTheme.bind(this);
+    state = {
+        theme: 'light'
     }
 
-    toggleTheme() {
+    toggleTheme = () => {
         this.setState(({theme}) => ({
             theme: theme === 'light' ? 'dark' : 'light'
         }));
