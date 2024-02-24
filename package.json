@@ -1,5 +1,5 @@
 {
-  "name": "github-battle",
+  "name": "github-solo",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -15,7 +15,7 @@
     ]
   },
   "keywords": [],
-  "author": "",
+  "author": "tuanpham435",
   "license": "ISC",
   "dependencies": {
     "prop-types": "^15.8.1",
