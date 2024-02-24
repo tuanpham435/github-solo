@@ -4,6 +4,7 @@ import "./index.css"
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Nav from "./components/Nav";
 import Loading from "./components/Loading";
+import {useState} from "react";
 
 /*
    In the following sections, we'll define a React component called App.
@@ -14,36 +15,30 @@ const Popular = React.lazy(() => import('./components/Popular'));
 const Battle = React.lazy(() => import('./components/Battle'));
 const Results = React.lazy(() => import('./components/Results'));
 
-class App extends React.Component {
-    state = {
-        theme: 'light'
+const App = () => {
+    const [theme, setTheme] = useState('light');
+
+    const toggleTheme = () => {
+        setTheme((theme) => theme === 'light' ? 'dark' : 'light');
     }
 
-    toggleTheme = () => {
-        this.setState(({theme}) => ({
-            theme: theme === 'light' ? 'dark' : 'light'
-        }));
-    }
-
-    render() {
-        return (
-            <Router>
-                <div className={this.state.theme}>
-                    <div className={'container'}>
-                        <Nav theme={this.state.theme} toggleTheme={this.toggleTheme}/>
-                        <React.Suspense fallback={<Loading/>}>
-                            <Routes>
-                                <Route path={'/'} element={<Popular/>}/>
-                                <Route path={'/battle'} element={<Battle/>}/>
-                                <Route path={'/results'} element={<Results/>}/>
-                            </Routes>
-                        </React.Suspense>
-                    </div>
+    return (
+        <Router>
+            <div className={theme}>
+                <div className={'container'}>
+                    <Nav theme={theme} toggleTheme={toggleTheme}/>
+                    <React.Suspense fallback={<Loading/>}>
+                        <Routes>
+                            <Route path={'/'} element={<Popular/>}/>
+                            <Route path={'/battle'} element={<Battle/>}/>
+                            <Route path={'/results'} element={<Results/>}/>
+                        </Routes>
+                    </React.Suspense>
                 </div>
-            </Router>
-        )
-    }
-}
+            </div>
+        </Router>
+    );
+};
 
 // Finds the HTML element with the id 'app' and stores it in the variable rootElement.
 const rootElement = document.getElementById('app');
