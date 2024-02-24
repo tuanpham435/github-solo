@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import {close} from "./icons";
-import Results from "./Results";
+import {Link} from "react-router-dom";
 
 function Instructions() {
     return (
@@ -109,7 +109,6 @@ export default class Battle extends Component {
         this.state = {
             playerOne: null,
             playerTwo: null,
-            battle: false,
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -132,22 +131,19 @@ export default class Battle extends Component {
         const {playerOne, playerTwo, battle} = this.state;
         const disabled = !playerOne || !playerTwo
 
-        if (battle === true) {
-            return <Results playerOne={playerOne} playerTwo={playerTwo}/>;
-        }
-
         return (
             <main className={'stack main-stack animate-in'}>
                 <div className={'split'}>
                     <h1>Players</h1>
-                    <button
-                        onClick={() => {
-                            this.setState({battle: true});
+                    <Link
+                        to={{
+                            pathname: '/results',
+                            search: `?playerOne=${playerOne}&playerTwo=${playerTwo}`
                         }}
                         className={`btn primary ${disabled ? "disabled" : ""}`}
                     >
                         Battle
-                    </button>
+                    </Link>
                 </div>
                 <section className={'grid'}>
                     {!playerOne ? (

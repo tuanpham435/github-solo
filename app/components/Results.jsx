@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {battle} from "../utils/api";
 import PropTypes from "prop-types";
 import Loading from "./Loading";
+import withSearchParams from "./withSearchParams";
+import {Link} from "react-router-dom";
 
 function Card({profile}) {
     const {
@@ -63,7 +65,8 @@ Card.propTypes = {
         company: PropTypes.string,
     }).isRequired,
 };
-export default class Results extends Component {
+
+class Results extends Component {
     constructor(props) {
         super(props);
 
@@ -76,9 +79,11 @@ export default class Results extends Component {
     }
 
     componentDidMount() {
-        const {playerOne, playerTwo} = this.props;
+        const searchParams = this.props.router.searchParams;
 
-        battle([playerOne, playerTwo])
+        const players = [searchParams.get('playerOne'), searchParams.get('playerTwo')]
+
+        battle(players)
             .then((players) => {
                 this.setState({
                     winner: players[0],
@@ -110,6 +115,12 @@ export default class Results extends Component {
             <main className="animate-in stack main-stack">
                 <div className="split">
                     <h1>Results</h1>
+                    <Link
+                        to={'/battle'}
+                        className={'btn primary'}
+                    >
+                        Reset
+                    </Link>
                 </div>
                 <section className="grid">
                     <article className="results-container">
@@ -132,7 +143,7 @@ export default class Results extends Component {
                         <Card profile={loser.profile}/>
                         <p className="results">
               <span>
-                {winner.score === loser.score ? "Tie" : "Loser"}
+                {winner.score === loser.score ? "Tie" : "Loser"}{" "}
                   {loser.score.toLocaleString()}
               </span>
                         </p>
@@ -142,3 +153,5 @@ export default class Results extends Component {
         );
     }
 }
+
+export default withSearchParams(Results);
