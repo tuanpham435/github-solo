@@ -80,7 +80,7 @@ class Popular extends Component {
                     />
                 </div>
 
-                {loading && <p className={'text-center'}><Loading/></p>}
+                {loading && <div className={'text-center'}><Loading/></div>}
 
                 {error && <p className={'text-center error'}>{error}</p>}
 
