@@ -3,17 +3,19 @@ import PropTypes from "prop-types";
 import {close} from "./icons";
 import {Link} from "react-router-dom";
 
-function Instructions() {
-    return (
-        <section className={'instructions-container'}>
-            <h2>Instructions</h2>
-            <ol>
-                <li>Enter 2 Github users</li>
-                <li>Battle</li>
-                <li>See the reviews</li>
-            </ol>
-        </section>
-    )
+class Instructions extends React.PureComponent {
+    render() {
+        return (
+            <section className={'instructions-container'}>
+                <h2>Instructions</h2>
+                <ol>
+                    <li>Enter 2 Github users</li>
+                    <li>Battle</li>
+                    <li>See the reviews</li>
+                </ol>
+            </section>
+        )
+    }
 }
 
 class PlayerInput extends Component {
