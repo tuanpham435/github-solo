@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {close} from "./icons";
 import {Link} from "react-router-dom";
 
-function Instructions() {
+const Instructions = React.memo(() => {
     return (
         <section className={'instructions-container'}>
             <h2>Instructions</h2>
@@ -14,7 +14,7 @@ function Instructions() {
             </ol>
         </section>
     )
-}
+})
 
 class PlayerInput extends Component {
     state = {
