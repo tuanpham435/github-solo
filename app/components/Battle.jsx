@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import PropTypes from "prop-types";
 import {close} from "./icons";
 import {Link} from "react-router-dom";
@@ -16,52 +16,43 @@ const Instructions = React.memo(() => {
     )
 })
 
-class PlayerInput extends Component {
-    state = {
-        username: "",
-    }
+const PlayerInput = ({label, onSubmit}) => {
+    const [username, setUsername] = useState("");
 
-    handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
-        this.props.onSubmit(this.state.username)
+        onSubmit(username);
     }
 
-    handleChange = (username) => {
-        this.setState({
-            username
-        })
+    const handleChange = (e) => {
+        setUsername(e.target.value);
     }
 
-    render() {
-        const {label} = this.props
-        const {username} = this.state
-
-        return (
-            <form className={'card'} onSubmit={this.handleSubmit}>
-                <label htmlFor="username" className={'player-label'}>
-                    {label}
-                </label>
-                <div className={'input-row'}>
-                    <input
-                        type="text"
-                        id="username"
-                        placeholder="github username"
-                        autoComplete="off"
-                        value={username}
-                        onChange={(e) => this.handleChange(e.target.value)}
-                    />
-                    <button
-                        className={'btn link'}
-                        type={'submit'}
-                        disabled={!username}
-                    >
-                        Submit
-                    </button>
-                </div>
-            </form>
-        )
-    }
+    return (
+        <form className={'card'} onSubmit={handleSubmit}>
+            <label htmlFor="username" className={'player-label'}>
+                {label}
+            </label>
+            <div className={'input-row'}>
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="github username"
+                    autoComplete="off"
+                    value={username}
+                    onChange={handleChange}
+                />
+                <button
+                    className={'btn link'}
+                    type={'submit'}
+                    disabled={!username}
+                >
+                    Submit
+                </button>
+            </div>
+        </form>
+    )
 }
 
 function PlayerPreview({username, onReset, label}) {
@@ -95,70 +86,62 @@ PlayerPreview.propTypes = {
     label: PropTypes.string.isRequired,
 };
 
-export default class Battle extends Component {
-    state = {
-        playerOne: null,
-        playerTwo: null,
+const Battle = () => {
+    const [players, setPlayers] = useState({playerOne: null, playerTwo: null});
+    const {playerOne, playerTwo} = players;
+    const disabled = !playerOne || !playerTwo;
+
+    const handleSubmit = (id, player) => {
+        setPlayers({...players, [id]: player})
     }
 
-    handleSubmit = (id, player) => {
-        this.setState({
-            [id]: player
-        })
+    const handleReset = (id, player) => {
+        setPlayers({...players, [id]: player})
     }
 
-    handleReset = (id) => {
-        this.setState({
-            [id]: null,
-        });
-    }
+    return (
+        <main className={'stack main-stack animate-in'}>
+            <div className={'split'}>
+                <h1>Players</h1>
+                <Link
+                    to={{
+                        pathname: '/results',
+                        search: `?playerOne=${playerOne}&playerTwo=${playerTwo}`
+                    }}
+                    className={`btn primary ${disabled ? "disabled" : ""}`}
+                >
+                    Battle
+                </Link>
+            </div>
+            <section className={'grid'}>
+                {!playerOne ? (
+                    <PlayerInput
+                        label={"Player One"}
+                        onSubmit={(player) => handleSubmit("playerOne", player)}
+                    />
+                ) : (
+                    <PlayerPreview
+                        onReset={() => handleReset("playerOne")}
+                        label={"Player One"}
+                        username={playerOne}
+                    />
+                )}
+                {!playerTwo ? (
+                    <PlayerInput
+                        label={"Player Two"}
+                        onSubmit={(player) => handleSubmit("playerTwo", player)}
+                    />
+                ) : (
+                    <PlayerPreview
+                        onReset={() => handleReset("playerTwo")}
+                        label={"Player Two"}
+                        username={playerTwo}
+                    />
+                )}
+            </section>
+            <Instructions/>
+        </main>
+    );
+};
 
-    render() {
-        const {playerOne, playerTwo, battle} = this.state;
-        const disabled = !playerOne || !playerTwo
-
-        return (
-            <main className={'stack main-stack animate-in'}>
-                <div className={'split'}>
-                    <h1>Players</h1>
-                    <Link
-                        to={{
-                            pathname: '/results',
-                            search: `?playerOne=${playerOne}&playerTwo=${playerTwo}`
-                        }}
-                        className={`btn primary ${disabled ? "disabled" : ""}`}
-                    >
-                        Battle
-                    </Link>
-                </div>
-                <section className={'grid'}>
-                    {!playerOne ? (
-                        <PlayerInput
-                            label={"Player One"}
-                            onSubmit={(player) => this.handleSubmit("playerOne", player)}
-                        />
-                    ) : (
-                        <PlayerPreview
-                            onReset={() => this.handleReset("playerOne")}
-                            label={"Player One"}
-                            username={playerOne}
-                        />
-                    )}
-                    {!playerTwo ? (
-                        <PlayerInput
-                            label={"Player Two"}
-                            onSubmit={(player) => this.handleSubmit("playerTwo", player)}
-                        />
-                    ) : (
-                        <PlayerPreview
-                            onReset={() => this.handleReset("PlayerTwo")}
-                            label={"Player Two"}
-                            username={playerTwo}
-                        />
-                    )}
-                </section>
-                <Instructions/>
-            </main>
-        );
-    }
-}
+export default Battle;

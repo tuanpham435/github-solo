@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useEffect, useReducer} from 'react';
 import PropTypes from "prop-types";
 import {fetchPopularRepos} from "../utils/api";
 import Table from "./Table";
@@ -29,65 +29,62 @@ LanguageNav.propTypes = {
     onUpdateLanguage: PropTypes.func.isRequired
 }
 
-class Popular extends Component {
-    state = {
-        selectedLanguage: "All",
-        repos: null,
-        error: null,
-        loading: false,
-    }
+const initialState = {
+    repos: null,
+    selectedLanguage: 'All',
+    error: null,
+    loading: false,
+}
 
-    componentDidMount() {
-        this.updateLanguage(this.state.selectedLanguage);
+function reducer(state, action) {
+    if (action.type === 'success') {
+        return {...state, repos: action.repos, error: null, loading: false};
+    } else if (action.type === 'error') {
+        return {...state, error: 'There was an error fetching the repositories', loading: false}
+    } else if (action.type === 'loading') {
+        return {...state, selectedLanguage: action.selectedLanguage, repos: null, error: null, loading: true};
+    } else {
+        throw new Error("This action type isn't supported.");
     }
+}
 
-    updateLanguage = (selectedLanguage) => {
-        this.setState({
-            repos: null,
-            selectedLanguage,
-            error: null,
-            loading: true,
-        });
+const Popular = () => {
+    const [state, dispatch] = useReducer(reducer, initialState);
+    const {selectedLanguage, repos, error, loading} = state;
+    const updateLanguage = (selectedLanguage) => {
+        dispatch({type: 'loading', selectedLanguage});
 
         fetchPopularRepos(selectedLanguage)
             .then((repos) => {
-                this.setState({
-                    repos,
-                    error: null,
-                })
+                dispatch({type: 'success', repos});
             })
             .catch((error) => {
                 console.warn("Error fetching repos:", error);
-                this.setState({
-                    error: 'There was an error fetching the repositories',
-                });
+                dispatch({type: 'error', error});
             })
-            .finally(() => {
-                this.setState({loading: false,});
-            });
     }
 
-    render() {
-        const {selectedLanguage, repos, error, loading} = this.state;
+    useEffect(() => {
+        updateLanguage(selectedLanguage);
+    }, [])
 
-        return (
-            <main className={'stack main-stack animate-in'}>
-                <div className={'split'}>
-                    <h1>Popular</h1>
-                    <LanguageNav
-                        selected={selectedLanguage}
-                        onUpdateLanguage={this.updateLanguage}
-                    />
-                </div>
+    return (
+        <main className={'stack main-stack animate-in'}>
+            <div className={'split'}>
+                <h1>Popular</h1>
+                <LanguageNav
+                    selected={selectedLanguage}
+                    onUpdateLanguage={updateLanguage}
+                />
+            </div>
 
-                {loading && <div className={'text-center'}><Loading/></div>}
+            {loading && <div className={'text-center'}><Loading/></div>}
 
-                {error && <p className={'text-center error'}>{error}</p>}
+            {error && <p className={'text-center error'}>{error}</p>}
 
-                {repos && <Table repos={repos}/>}
-            </main>
-        );
-    }
-}
+            {repos && <Table repos={repos}/>}
+        </main>
+    );
+};
 
 export default Popular;
